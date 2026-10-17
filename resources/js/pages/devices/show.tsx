@@ -1,5 +1,5 @@
 import { Head, Link, router, useForm } from '@inertiajs/react';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {
     Activity,
     ArrowLeft,
@@ -16,7 +16,7 @@ import {
     Trash2,
     Zap,
 } from 'lucide-react';
-import AppLayout from '@/layouts/app-layout';
+import AppLayout, { AppLayoutContext } from '@/layouts/app-layout';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -149,14 +149,19 @@ export default function DeviceShow({ device }: Props) {
         }
     };
 
+    const appLayoutContext = useContext(AppLayoutContext);
+
+    useEffect(() => {
+        appLayoutContext.setBreadcrumbsData([
+            { title: 'Dashboard', href: '/dashboard' },
+            { title: 'IoT Devices', href: '/devices' },
+            { title: device.name, href: `/devices/${device.id}` },
+        ])
+    }, []);
+
+
     return (
-        <AppLayout
-            breadcrumbs={[
-                { title: 'Dashboard', href: '/dashboard' },
-                { title: 'IoT Devices', href: '/devices' },
-                { title: device.name, href: `/devices/${device.id}` },
-            ]}
-        >
+        <>
             <Head title={`${device.name} - LARAVEL-IO`} />
 
             <div className="flex h-full flex-1 flex-col gap-6 p-4 md:p-8">
@@ -558,8 +563,8 @@ export default function DeviceShow({ device }: Props) {
                                                             topic.last_status === 'success'
                                                                 ? 'default'
                                                                 : topic.last_status === 'simulated'
-                                                                ? 'secondary'
-                                                                : 'destructive'
+                                                                    ? 'secondary'
+                                                                    : 'destructive'
                                                         }
                                                         className="text-[10px] py-0 px-1.5 capitalize"
                                                     >
@@ -650,8 +655,8 @@ export default function DeviceShow({ device }: Props) {
                                                         log.status === 'success'
                                                             ? 'default'
                                                             : log.status === 'simulated'
-                                                            ? 'secondary'
-                                                            : 'destructive'
+                                                                ? 'secondary'
+                                                                : 'destructive'
                                                     }
                                                     className="text-[10px] py-0 capitalize"
                                                 >
@@ -672,6 +677,6 @@ export default function DeviceShow({ device }: Props) {
                     )}
                 </div>
             </div>
-        </AppLayout>
+        </>
     );
 }

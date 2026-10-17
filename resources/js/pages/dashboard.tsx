@@ -14,7 +14,7 @@ import {
     Wifi,
     Zap,
 } from 'lucide-react';
-import AppLayout from '@/layouts/app-layout';
+import AppLayout, { AppLayoutContext } from '@/layouts/app-layout';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -26,6 +26,7 @@ import {
 } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import type { BrokerInfo, DashboardStats, Device, DeviceExecutionLog, DeviceTopic } from '@/types/iot';
+import { useContext, useEffect } from 'react';
 
 interface Props {
     stats: DashboardStats;
@@ -54,8 +55,14 @@ export default function Dashboard({
         });
     };
 
+    const appLayoutContext = useContext(AppLayoutContext);
+
+    useEffect(() => {
+        appLayoutContext.setBreadcrumbsData([{ title: 'Dashboard', href: '/dashboard' }])
+    }, []);
+
     return (
-        <AppLayout breadcrumbs={[{ title: 'Dashboard', href: '/dashboard' }]}>
+        <>
             <Head title="IoT Dashboard - LARAVEL-IO" />
 
             <div className="flex h-full flex-1 flex-col gap-6 p-4 md:p-8">
@@ -292,8 +299,8 @@ export default function Dashboard({
                                                             log.status === 'success'
                                                                 ? 'default'
                                                                 : log.status === 'simulated'
-                                                                ? 'secondary'
-                                                                : 'destructive'
+                                                                    ? 'secondary'
+                                                                    : 'destructive'
                                                         }
                                                         className="text-[10px] py-0 capitalize"
                                                     >
@@ -319,6 +326,6 @@ export default function Dashboard({
                     </Card>
                 </div>
             </div>
-        </AppLayout>
+        </>
     );
 }

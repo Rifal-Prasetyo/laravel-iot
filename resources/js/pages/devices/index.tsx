@@ -1,5 +1,5 @@
 import { Head, Link, useForm } from '@inertiajs/react';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {
     Activity,
     Cpu,
@@ -11,7 +11,7 @@ import {
     Search,
     Trash2,
 } from 'lucide-react';
-import AppLayout from '@/layouts/app-layout';
+import AppLayout, { AppLayoutContext } from '@/layouts/app-layout';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -70,13 +70,17 @@ export default function DevicesIndex({ devices }: Props) {
         (dev.location && dev.location.toLowerCase().includes(search.toLowerCase()))
     );
 
+    const appLayoutContext = useContext(AppLayoutContext);
+
+    useEffect(() => {
+        appLayoutContext.setBreadcrumbsData([
+            { title: 'Dashboard', href: '/dashboard' },
+            { title: 'IoT Devices', href: '/devices' },
+        ])
+    }, []);
+
     return (
-        <AppLayout
-            breadcrumbs={[
-                { title: 'Dashboard', href: '/dashboard' },
-                { title: 'IoT Devices', href: '/devices' },
-            ]}
-        >
+        <>
             <Head title="IoT Devices - LARAVEL-IO" />
 
             <div className="flex h-full flex-1 flex-col gap-6 p-4 md:p-8">
@@ -275,6 +279,6 @@ export default function DevicesIndex({ devices }: Props) {
                     </div>
                 )}
             </div>
-        </AppLayout>
+        </>
     );
 }
